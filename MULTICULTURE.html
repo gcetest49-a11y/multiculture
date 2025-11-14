@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 활용 다문화 학생 교육 개선 방안</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Chosen Palette: Warm Harmony (Stone & Teal) -->
+    <!-- Application Structure Plan: A thematic, tab-based SPA. A persistent top navigation (Situation, Solutions, Strategy, Outcomes) controls the main content area, dynamically showing/hiding the relevant section. This is user-friendly as it segments a complex report into manageable, self-contained topics. It's better than a linear scroll because it allows users to jump directly to their area of interest. Interactions within each section (clickable cards, sub-tabs) further break down information, guiding the user from a high-level overview to specific details. This structure prioritizes user-driven exploration. -->
+    <!-- Visualization & Content Choices: 
+        Report Info: Growth of multicultural students -> Goal: Show trend -> Viz: Line Chart -> Interaction: Hover tooltip -> Justification: Clear trend visualization -> Library: Chart.js
+        Report Info: Key Problems (Language, Culture, etc.) -> Goal: Organize & Inform -> Viz: Interactive Cards (HTML/CSS) -> Interaction: Click to reveal detail text -> Justification: Breaks down complex info into digestible, user-initiated chunks -> Library: Vanilla JS
+        Report Info: 4 AI Solutions -> Goal: Organize & Detail -> Viz: Internal Tabbed Interface (HTML/CSS) -> Interaction: Click tab to switch content -> Justification: Organizes dense, parallel information neatly -> Library: Vanilla JS
+        Report Info: 3-Phase Strategy -> Goal: Show process -> Viz: HTML/CSS Process Diagram -> Interaction: Click phase to see details -> Justification: Visualizes a linear flow without complex graphics -> Library: Vanilla JS
+        Report Info: Expected Outcomes -> Goal: Show proportions -> Viz: Donut Chart -> Interaction: Hover tooltip -> Justification: Shows relative impact of benefits -> Library: Chart.js 
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-btn {
+            @apply px-4 py-3 text-sm md:text-base font-medium text-stone-500 border-b-4 border-transparent hover:text-teal-600;
+        }
+        .nav-btn.active {
+            @apply text-teal-600 border-teal-600;
+        }
+        .tab-content {
+            @apply p-4 md:p-6 bg-white rounded-lg shadow-lg;
+        }
+        .problem-card {
+            @apply p-4 border-2 border-stone-200 rounded-lg cursor-pointer hover:shadow-md transition-all;
+        }
+        .problem-card.active {
+            @apply border-teal-500 bg-teal-50 ring-2 ring-teal-500;
+        }
+        .solution-tab-btn {
+            @apply flex-1 p-4 text-center text-stone-600 bg-stone-100 rounded-t-lg cursor-pointer hover:bg-teal-50;
+        }
+        .solution-tab-btn.active {
+            @apply bg-white text-teal-700 font-semibold border-b-0;
+        }
+        .phase-block {
+            @apply flex-1 p-6 bg-white border-2 border-stone-200 rounded-lg shadow-sm cursor-pointer hover:shadow-lg transition-transform hover:scale-105;
+        }
+        .phase-block.active {
+            @apply border-teal-500 bg-teal-50 ring-2 ring-teal-500;
+        }
+        .phase-arrow {
+            @apply text-4xl text-stone-300 mx-4 hidden md:block;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center py-4">
+                <h1 class="text-2xl md:text-3xl font-bold text-teal-700">AI 활용 다문화 학생 교육 개선 방안</h1>
+                <nav class="flex flex-wrap justify-center space-x-2 md:space-x-4 mt-4 md:mt-0">
+                    <button class="nav-btn active" data-tab="s1">현황 및 문제점</button>
+                    <button class="nav-btn" data-tab="s2">AI 솔루션</button>
+                    <button class="nav-btn" data-tab="s3">도입 전략</button>
+                    <button class="nav-btn" data-tab="s4">기대 효과</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main id="content-container" class="container mx-auto p-4 md:p-8 max-w-7xl">
+        
+        <!-- Section 1: 현황 및 문제점 -->
+        <section id="s1-content" class="tab-content space-y-8">
+            <p class="text-lg text-stone-600">
+                한국의 다문화 학생 수는 지속적으로 증가하고 있지만, 교육 현장에서의 참여도와 학업 성취도는 여러 장벽에 부딪히고 있습니다. 언어와 문화의 차이, 개별화된 지원 부족은 시급히 해결해야 할 문제입니다. 이 섹션에서는 현재의 데이터와 주요 문제점을 살펴봅니다.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="space-y-4">
+                    <h2 class="text-2xl font-semibold text-teal-700">다문화 학생 수 증가 추이</h2>
+                    <p class="text-stone-600">
+                        교육부 통계에 따르면, 국내 다문화 학생 수는 매년 꾸준히 증가하여 교육 현장의 다양성이 심화되고 있습니다. 이러한 변화는 맞춤형 교육 시스템의 필요성을 강조합니다.
+                    </p>
+                    <div class="bg-teal-50 p-6 rounded-lg text-center">
+                        <span class="block text-xl font-medium text-teal-800">2024년 기준</span>
+                        <span class="block text-5xl font-bold text-teal-600">18만명</span>
+                        <span class="block text-lg text-teal-700">돌파</span>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="studentGrowthChart"></canvas>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <h2 class="text-2xl font-semibold text-teal-700 text-center">다문화 학생이 겪는 주요 문제점</h2>
+                <p class="text-center text-stone-600 max-w-3xl mx-auto">학생들이 겪는 어려움은 복합적입니다. 아래 카드를 클릭하여 각 문제점에 대한 세부 내용을 확인해 보세요.</p>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="problem-card active" data-problem="lang">
+                        <h3 class="text-xl font-semibold text-center">💬</h3>
+                        <h3 class="text-lg font-semibold text-center">언어 장벽</h3>
+                    </div>
+                    <div class="problem-card" data-problem="culture">
+                        <h3 class="text-xl font-semibold text-center">🌍</h3>
+                        <h3 class="text-lg font-semibold text-center">문화적 차이</h3>
+                    </div>
+                    <div class="problem-card" data-problem="support">
+                        <h3 class="text-xl font-semibold text-center">🤝</h3>
+                        <h3 class="text-lg font-semibold text-center">개별 지원 부족</h3>
+                    </div>
+                    <div class="problem-card" data-problem="content">
+                        <h3 class="text-xl font-semibold text-center">📚</h3>
+                        <h3 class="text-lg font-semibold text-center">학습 콘텐츠 이질감</h3>
+                    </div>
+                </div>
+                <div class="mt-4 p-6 bg-stone-100 rounded-lg min-h-[150px]">
+                    <div id="lang-detail" class="problem-detail space-y-2">
+                        <h4 class="text-xl font-semibold text-teal-800">언어 장벽</h4>
+                        <p class="text-stone-700">한국어 능력이 부족하여 수업 내용을 이해하고 교우 관계를 맺는 데 큰 어려움을 겪습니다. 이는 학업 성취도 저하와 학교 부적응의 가장 큰 원인입니다.</p>
+                    </div>
+                    <div id="culture-detail" class="problem-detail hidden space-y-2">
+                        <h4 class="text-xl font-semibold text-teal-800">문화적 차이</h4>
+                        <p class="text-stone-700">한국의 학교 문화와 학습 방식이 모국과 달라 혼란을 겪습니다. 교사와 학생 간의 상호작용, 친구 관계 형성 방식의 차이로 인해 심리적 위축과 고립감을 느낄 수 있습니다.</p>
+                    </div>
+                    <div id="support-detail" class="problem-detail hidden space-y-2">
+                        <h4 class="text-xl font-semibold text-teal-800">개별 지원 부족</h4>
+                        <p class="text-stone-700">교사 한 명이 다양한 언어와 문화적 배경을 가진 학생들을 모두 맞춤형으로 지원하기에는 한계가 있습니다. 학생 개개인의 수준과 필요에 맞는 교육적 개입이 절실합니다.</p>
+                    </div>
+                    <div id="content-detail" class="problem-detail hidden space-y-2">
+                        <h4 class="text-xl font-semibold text-teal-800">학습 콘텐츠 이질감</h4>
+                        <p class="text-stone-700">교과서와 학습 자료가 한국 학생들 중심으로 구성되어 있어 다문화 학생들이 공감대를 형성하기 어렵습니다. 이는 학습 동기 저하로 이어질 수 있습니다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: AI 솔루션 -->
+        <section id="s2-content" class="tab-content hidden space-y-8">
+            <p class="text-lg text-stone-600">
+                AI 기술은 다문화 학생들이 겪는 문제점들을 해결할 강력한 잠재력을 가지고 있습니다. 24시간 접근 가능한 개인 맞춤형 지원을 통해 학생들의 학습 격차를 해소하고 참여도를 높일 수 있습니다. 이 섹션에서는 4가지 핵심 AI 솔루션을 제안합니다.
+            </p>
+
+            <div class="flex flex-col">
+                <div class="flex border-b border-stone-200">
+                    <button class="solution-tab-btn active" data-solution="tutor">
+                        <span class="text-2xl">💬</span>
+                        <span class="block font-medium">AI 언어 튜터</span>
+                    </button>
+                    <button class="solution-tab-btn" data-solution="path">
+                        <span class="text-2xl">🚀</span>
+                        <span class="block font-medium">맞춤형 학습 경로</span>
+                    </button>
+                    <button class="solution-tab-btn" data-solution="culture">
+                        <span class="text-2xl">🌍</span>
+                        <span class="block font-medium">문화 교류 봇</span>
+                    </button>
+                    <button class="solution-tab-btn" data-solution="teacher">
+                        <span class="text-2xl">📊</span>
+                        <span class="block font-medium">교사 지원 대시보드</span>
+                    </button>
+                </div>
+                
+                <div class="p-6 md:p-8 bg-white rounded-b-lg border border-t-0 border-stone-200">
+                    <div id="tutor-content" class="solution-content space-y-4">
+                        <h3 class="text-2xl font-semibold text-teal-700">솔루션 1: AI 기반 실시간 언어 튜터</h3>
+                        <p class="text-stone-600">언어 장벽을 직접적으로 해결하기 위한 솔루션입니다. 학생들은 언제 어디서나 AI 튜터와 한국어 연습을 할 수 있습니다.</p>
+                        <ul class="list-disc list-inside space-y-2 text-stone-700">
+                            <li><strong>실시간 번역 및 어휘 지원:</strong> 수업 중 모르는 단어나 문장을 즉시 번역하고, 교과목별 필수 어휘를 모국어로 설명합니다.</li>
+                            <li><strong>발음 교정:</strong> 음성 인식 기술을 활용하여 학생의 한국어 발음을 듣고 실시간으로 피드백을 제공합니다.</li>
+                            <li><strong>맥락 기반 대화 연습:</strong> '학교 생활', '친구와 대화하기' 등 실제적인 상황을 시뮬레이션하여 대화형 연습을 지원합니다.</li>
+                        </ul>
+                    </div>
+                    <div id="path-content" class="solution-content hidden space-y-4">
+                        <h3 class="text-2xl font-semibold text-teal-700">솔루션 2: AI 개인 맞춤형 학습 경로 (ALP)</h3>
+                        <p class="text-stone-600">학생의 현재 한국어 수준과 과목별 이해도를 AI가 진단하여 개인에게 최적화된 학습 로드맵을 제공합니다.</p>
+                        <ul class="list-disc list-inside space-y-2 text-stone-700">
+                            <li><strong>적응형 진단:</strong> 학생의 강점과 약점을 파악하여, 보충이 필요한 영역을 식별합니다.</li>
+                            <li><strong>콘텐츠 큐레이션:</strong> 학생의 수준과 흥미에 맞는 학습 자료(영상, 읽기 자료, 퀴즈)를 모국어와 한국어로 함께 제공합니다.</li>
+                            <li><strong>'브릿지' 콘텐츠 제공:</strong> 모국에서의 선수 지식과 한국의 교과 과정을 연결하는 보충 자료를 제공하여 이해를 돕습니다.</li>
+                        </ul>
+                    </div>
+                    <div id="culture-content" class="solution-content hidden space-y-4">
+                        <h3 class="text-2xl font-semibold text-teal-700">솔루션 3: AI 문화 교류 및 적응 지원 봇</h3>
+                        <p class="text-stone-600">학습 콘텐츠의 이질감을 줄이고, 학교 문화 적응을 돕는 챗봇입니다.</p>
+                        <ul class="list-disc list-inside space-y-2 text-stone-700">
+                            <li><strong>문화적 맥락 제공:</strong> 교과서 속 한국의 역사, 사회, 문학 작품에 대해 학생의 모국 문화와 비교/대조하는 설명을 제공하여 이해도를 높입니다.</li>
+                            <li><strong>학교 생활 Q&A:</strong> '급식 시간 예절', '동아리 가입 방법' 등 학교 생활에 대한 사소한 질문에 24시간 답변합니다.</li>
+                            <li><strong>심리적 지원:</strong> 비판단적인 대화 상대로서 학생의 고민을 들어주고, 긍정적인 상호작용을 통해 고립감을 해소합니다.</li>
+                        </ul>
+                    </div>
+                    <div id="teacher-content" class="solution-content hidden space-y-4">
+                        <h3 class="text-2xl font-semibold text-teal-700">솔루션 4: 교사 지원 AI 대시보드</h3>
+                        <p class="text-stone-600">교사들이 다문화 학생들을 더 효과적으로 지도할 수 있도록 데이터를 기반으로 한 통찰을 제공합니다.</p>
+                        <ul class="list-disc list-inside space-y-2 text-stone-700">
+                            <li><strong>학생 데이터 시각화:</strong> 학생별 학습 진도, AI 튜터 사용 시간, 취약 영역 등을 한눈에 파악할 수 있도록 시각화합니다.</li>
+                            <li><strong>AI 기반 조기 경보:</strong> 특정 학생의 참여도가 급격히 떨어지거나, 특정 개념에서 반복적으로 어려움을 보일 경우 교사에게 알림을 보냅니다.</li>
+                            <li><strong>맞춤형 지도 자료 추천:</strong> AI가 학생의 데이터를 분석하여, 교사에게 효과적인 지도 방법이나 보충 자료를 추천합니다.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: 도입 전략 -->
+        <section id="s3-content" class="tab-content hidden space-y-8">
+            <p class="text-lg text-stone-600">
+                성공적인 AI 교육 시스템 도입을 위해서는 체계적인 단계별 접근이 필요합니다. 현장의 혼란을 최소화하고 효과를 극대화하기 위해 시범 운영, 확대 적용, 통합 고도화의 3단계 전략을 제안합니다. 아래 단계를 클릭하여 세부 내용을 확인하세요.
+            </p>
+
+            <div class="flex flex-col md:flex-row items-center justify-center">
+                <div class="phase-block active" data-phase="1">
+                    <span class="block text-3xl text-center">1️⃣</span>
+                    <h3 class="text-xl font-semibold text-center mt-2">1단계: 시범 사업 및 기반 구축</h3>
+                    <p class="text-sm text-center text-stone-500">(~1년)</p>
+                </div>
+                <div class="phase-arrow">→</div>
+                <div class="w-full md:w-auto h-8 md:h-auto"></div>
+                <div class="phase-block" data-phase="2">
+                    <span class="block text-3xl text-center">2️⃣</span>
+                    <h3 class="text-xl font-semibold text-center mt-2">2단계: 확대 적용 및 고도화</h3>
+                    <p class="text-sm text-center text-stone-500">(2~3년)</p>
+                </div>
+                <div class="phase-arrow">→</div>
+                <div class="w-full md:w-auto h-8 md:h-auto"></div>
+                <div class="phase-block" data-phase="3">
+                    <span class="block text-3xl text-center">3️⃣</span>
+                    <h3 class="text-xl font-semibold text-center mt-2">3단계: 전체 통합 및 생태계 조성</h3>
+                    <p class="text-sm text-center text-stone-500">(4년~)</p>
+                </div>
+            </div>
+
+            <div class="mt-6 p-6 bg-stone-100 rounded-lg min-h-[200px]">
+                <div id="phase-1-detail" class="phase-detail space-y-3">
+                    <h4 class="text-xl font-semibold text-teal-800">1단계: 시범 사업 및 기반 구축</h4>
+                    <p class="text-stone-700">다문화 학생 비율이 높은 특정 지역의 시범 학교를 선정하여 'AI 언어 튜터'를 우선적으로 도입합니다. 현장 교사 및 학생들의 피드백을 수집하여 솔루션을 개선하고, 안정적인 데이터 인프라를 구축합니다.</p>
+                    <ul class="list-disc list-inside text-stone-700">
+                        <li><strong>핵심 과제:</strong> AI 언어 튜터 도입, 교사 연수, 피드백 수집 및 초기 데이터 분석.</li>
+                        <li><strong>주요 솔루션:</strong> 💬 AI 언어 튜터</li>
+                    </ul>
+                </div>
+                <div id="phase-2-detail" class="phase-detail hidden space-y-3">
+                    <h4 class="text-xl font-semibold text-teal-800">2단계: 확대 적용 및 고도화</h4>
+                    <p class="text-stone-700">시범 사업의 성공 모델을 전국적으로 확대 적용합니다. '개인 맞춤형 학습 경로(ALP)'와 '교사 지원 대시보드'를 도입하여 개별화된 학습 지원을 강화합니다. 축적된 데이터를 기반으로 AI 모델을 고도화합니다.</p>
+                    <ul class="list-disc list-inside text-stone-700">
+                        <li><strong>핵심 과제:</strong> 전국 확대, ALP 및 교사 대시보드 연동, AI 모델 학습 및 정교화.</li>
+                        <li><strong>주요 솔루션:</strong> 🚀 맞춤형 학습 경로, 📊 교사 지원 대시보드</li>
+                    </ul>
+                </div>
+                <div id="phase-3-detail" class="phase-detail hidden space-y-3">
+                    <h4 class="text-xl font-semibold text-teal-800">3단계: 전체 통합 및 생태계 조성</h4>
+                    <p class="text-stone-700">모든 AI 솔루션을 공교육 시스템(EBS, KERIS 등)과 유기적으로 통합합니다. '문화 교류 봇'을 포함한 모든 기능이 원활하게 작동하는 AI 기반 교육 생태계를 완성합니다. 데이터 기반의 교육 정책 수립을 지원합니다.</p>
+                    <ul class="list-disc list-inside text-stone-700">
+                        <li><strong>핵심 과제:</strong> 공교육 플랫폼 연동, AI 교육 생태계 완성, 데이터 기반 정책 제안.</li>
+                        <li><strong>주요 솔루션:</strong> 🌍 문화 교류 봇, 전체 시스템 통합</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: 기대 효과 -->
+        <section id="s4-content" class="tab-content hidden space-y-8">
+            <p class="text-lg text-stone-600">
+                AI 기반 교육 개선 방안이 성공적으로 도입되면, 다문화 학생 개인의 성장을 넘어 한국 사회 전체의 통합과 발전에 기여할 수 있습니다. 이는 단순한 교육 지원을 넘어, 모든 학생이 잠재력을 발휘할 수 있는 포용적인 교육 환경을 만드는 첫걸음입니다.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="space-y-4">
+                    <h2 class="text-2xl font-semibold text-teal-700">주요 기대 효과</h2>
+                    <p class="text-stone-600">
+                        제안된 AI 솔루션은 다문화 학생들의 학교 생활 전반에 걸쳐 긍정적인 변화를 가져올 것입니다.
+                    </p>
+                    <ul class="space-y-4">
+                        <li class="flex items-start space-x-3">
+                            <span class="text-teal-500 text-2xl font-bold">1.</span>
+                            <div>
+                                <h4 class="font-semibold text-lg text-stone-800">학습 참여도 및 동기 부여</h4>
+                                <p class="text-stone-600">자신의 수준에 맞는 콘텐츠와 즉각적인 피드백을 통해 학습에 대한 흥미와 자신감을 갖게 됩니다.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <span class="text-teal-500 text-2xl font-bold">2.</span>
+                            <div>
+                                <h4 class="font-semibold text-lg text-stone-800">학업 성취도 향상</h4>
+                                <p class="text-stone-600">언어 장벽과 학습 격차를 해소하여, 교과 과정을 성공적으로 이수할 수 있도록 지원합니다.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <span class="text-teal-500 text-2xl font-bold">3.</span>
+                            <div>
+                                <h4 class="font-semibold text-lg text-stone-800">심리적 안정 및 사회적 통합</h4>
+                                <p class="text-stone-600">문화적 이질감과 고립감을 줄이고, 교사 및 또래 학생들과의 긍정적인 관계 형성을 돕습니다.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <span class="text-teal-500 text-2xl font-bold">4.</span>
+                            <div>
+                                <h4 class="font-semibold text-lg text-stone-800">교육 형평성 제고</h4>
+                                <p class="text-stone-600">가정 환경이나 지역에 상관없이 모든 다문화 학생에게 고품질의 맞춤형 교육 기회를 제공합니다.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="chart-container">
+                    <canvas id="outcomesDonutChart"></canvas>
+                    <p class="text-center text-sm text-stone-500 mt-2">AI 도입을 통한 기대 효과 영역</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-6 mt-8">
+        <p class="text-sm text-stone-500">&copy; 2025 AI-Powered Education Initiative. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+                let words = text.split(''); 
+                let line = '';
+                let testLine = '';
+                let lineCount = 0;
+
+                for(let n = 0; n < words.length; n++) {
+                    testLine = line + words[n];
+                    let metrics = ctx.measureText(testLine);
+                    let testWidth = metrics.width;
+
+                    if (testWidth > maxWidth && n > 0) {
+                        ctx.fillText(line, x, y);
+                        line = words[n];
+                        y += lineHeight;
+                        lineCount++;
+                    } else {
+                        line = testLine;
+                    }
+                }
+                ctx.fillText(line, x, y);
+            }
+
+            function formatLabel(label) {
+                if (label.length > 16) {
+                    return label.substring(0, 16) + '...';
+                }
+                return label;
+            }
+
+            const chartData = {
+                growth: {
+                    labels: ['2020년', '2021년', '2022년', '2023년', '2024년'],
+                    data: [147378, 160058, 168645, 175480, 181349] 
+                },
+                outcomes: {
+                    labels: ['학습 참여도 향상', '학업 성취도 개선', '사회적/정서적 안정'],
+                    data: [40, 35, 25]
+                }
+            };
+
+            function initCharts() {
+                const growthCtx = document.getElementById('studentGrowthChart').getContext('2d');
+                if (window.studentGrowthChartInstance) {
+                    window.studentGrowthChartInstance.destroy();
+                }
+                window.studentGrowthChartInstance = new Chart(growthCtx, {
+                    type: 'line',
+                    data: {
+                        labels: chartData.growth.labels,
+                        datasets: [{
+                            label: '다문화 학생 수 (명)',
+                            data: chartData.growth.data,
+                            borderColor: 'rgb(13, 148, 136)',
+                            backgroundColor: 'rgba(13, 148, 136, 0.1)',
+                            fill: true,
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'bottom'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.dataset.label}: ${context.parsed.y.toLocaleString()}명`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: false,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value.toLocaleString();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                const outcomesCtx = document.getElementById('outcomesDonutChart').getContext('2d');
+                if (window.outcomesDonutChartInstance) {
+                    window.outcomesDonutChartInstance.destroy();
+                }
+                window.outcomesDonutChartInstance = new Chart(outcomesCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: chartData.outcomes.labels,
+                        datasets: [{
+                            data: chartData.outcomes.data,
+                            backgroundColor: [
+                                'rgb(13, 148, 136)', 
+                                'rgb(15, 118, 110)', 
+                                'rgb(17, 94, 89)'    
+                            ],
+                            hoverOffset: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'bottom'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        let value = context.parsed;
+                                        return `${label}: ${value}%`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            const navButtons = document.querySelectorAll('.nav-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetTab = button.getAttribute('data-tab');
+
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    tabContents.forEach(content => {
+                        if (content.id === `${targetTab}-content`) {
+                            content.classList.remove('hidden');
+                        } else {
+                            content.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+
+            const problemCards = document.querySelectorAll('.problem-card');
+            const problemDetails = document.querySelectorAll('.problem-detail');
+
+            problemCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const targetProblem = card.getAttribute('data-problem');
+
+                    problemCards.forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+
+                    problemDetails.forEach(detail => {
+                        if (detail.id === `${targetProblem}-detail`) {
+                            detail.classList.remove('hidden');
+                        } else {
+                            detail.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+
+            const solutionTabs = document.querySelectorAll('.solution-tab-btn');
+            const solutionContents = document.querySelectorAll('.solution-content');
+
+            solutionTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetSolution = tab.getAttribute('data-solution');
+
+                    solutionTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    solutionContents.forEach(content => {
+                        if (content.id === `${targetSolution}-content`) {
+                            content.classList.remove('hidden');
+                        } else {
+                            content.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+
+            const phaseBlocks = document.querySelectorAll('.phase-block');
+            const phaseDetails = document.querySelectorAll('.phase-detail');
+
+            phaseBlocks.forEach(block => {
+                block.addEventListener('click', () => {
+                    const targetPhase = block.getAttribute('data-phase');
+
+                    phaseBlocks.forEach(b => b.classList.remove('active'));
+                    block.classList.add('active');
+
+                    phaseDetails.forEach(detail => {
+                        if (detail.id === `phase-${targetPhase}-detail`) {
+                            detail.classList.remove('hidden');
+                        } else {
+                            detail.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+
+            initCharts();
+        });
+    </script>
+
+</body>
+</html>
